@@ -2,7 +2,7 @@
 % Please edit documentation in R/date_to_iso.R
 \name{get_months_sep_by_vertical_bar}
 \alias{get_months_sep_by_vertical_bar}
-\title{Get vector with months separated by vertical bar}
+\title{Get vector with full and abbreviated name of months separated by vertical bar}
 \usage{
 get_months_sep_by_vertical_bar()
 }
@@ -10,7 +10,7 @@ get_months_sep_by_vertical_bar()
 full names and abbreviations of months separated by vertical bar
 }
 \description{
-Get vector with months separated by vertical bar
+Get vector with full and abbreviated name of months separated by vertical bar
 }
 \author{
 Lukasz Andrzejewski

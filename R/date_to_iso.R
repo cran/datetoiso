@@ -1,4 +1,4 @@
-#' List month names in lower case
+#' List month names: full names and abbreviated  names in lower case
 #'
 #' @author Lukasz Andrzejewski
 #' @return full names and abbreviations of months
@@ -11,8 +11,18 @@ get_months<-function(){
   return(months)
 }
 
+#' List month names: full names in lower case
+#'
+#' @author Lukasz Andrzejewski
+#' @return full names of months
 
-#' Get vector with months separated by vertical bar
+get_months_full_names<-function(){
+  months<- tolower(c("January", "February", "March", "April", "May", "June", "July", "August",
+                     "September", "October", "November", "December"))
+  return(months)
+}
+
+#' Get vector with full and abbreviated name of months separated by vertical bar
 #'
 #' @author Lukasz Andrzejewski
 #' @return full names and abbreviations of months separated by vertical bar
@@ -20,6 +30,33 @@ get_months<-function(){
 get_months_sep_by_vertical_bar<- function(){
   months_sep_by_vertical_bar<- paste(get_months(),sep="",collapse="|")
   return(months_sep_by_vertical_bar)
+}
+
+#' Get vector with full name of months separated by vertical bar
+#'
+#' @author Lukasz Andrzejewski
+#' @return full names and abbreviations of months separated by vertical bar
+
+get_full_name_months_sep_by_vertical_bar<- function(){
+  months_sep_by_vertical_bar<- paste(get_months_full_names(),sep="",collapse="|")
+  return(months_sep_by_vertical_bar)
+}
+
+#' Replace full month name by abbreviated month name
+#'
+#' @param df_column data frame date column or vector with dates
+#' @author Lukasz Andrzejewski
+#' @return vector, if any full length month name, then replace by abbreviated month name
+
+get_abbreviated_month_name<-function(df_column){
+  month_abbreviations <- c("january" = "Jan", "february" = "Feb", "march" = "Mar",
+                           "april" = "Apr", "may" = "May", "june" = "Jun",
+                           "july" = "Jul", "august" = "Aug", "september" = "Sep",
+                           "october" = "Oct", "november" = "Nov", "december" = "Dec")
+  replace_full_month_name_by_abb <- ifelse(grepl(get_full_name_months_sep_by_vertical_bar(),tolower(df_column)),
+                                                                                          stringr::str_replace_all(tolower(df_column), month_abbreviations),
+                                                                                          df_column)
+  return(replace_full_month_name_by_abb)
 }
 
 #' function return observations with up to 12 characters
@@ -63,11 +100,22 @@ has_dash_or_slash_or_white_space_characters_or_months_separated_by_vertical_bar 
 #' or month names
 
 find_only_dates<-function(df_column){
+  df_column<-get_abbreviated_month_name(df_column)
   df_column<-get_up_to_12_char(df_column)
-  find_date<-grepl(has_dash_or_slash_or_white_space_characters_or_months_separated_by_vertical_bar(),df_column) &
-  ((grepl("^[[:digit:]]",df_column) & nchar(df_column)>=6) &
-  (!is.na(df_column) & df_column!=" "))
+  find_date<-grepl(has_dash_or_slash_or_white_space_characters_or_months_separated_by_vertical_bar(),tolower(df_column)) &
+              grepl("[[:digit:]]",df_column) & nchar(df_column)>=6 &
+              !is.na(df_column) & df_column!=" " & !find_unknow_date(df_column)
   return(find_date)
+}
+
+#' Find Unknown date, defined as UN or UNK
+#'
+#' @param df_column data frame date column or vector with dates
+#' @author Lukasz Andrzejewski
+#' @return logical vector, TRUE if "un" character is found but not "jun"
+find_unknow_date<-function(df_column){
+  unknown_date<-grepl("[^j]un",tolower(df_column))
+  return(unknown_date)
 }
 
 
@@ -84,6 +132,29 @@ remove_no_date_characters<- function(df_column,symbols="[;:+]"){
   return(df_column)
 }
 
+#' Function to find number of symbols in date
+#'
+#' @param df_column data frame date column or vector with dates
+#' @param symbol symbol that needs to be found, by default "T"
+#' @author Lukasz Andrzejewski
+#' @return number of found symbols
+get_number_of_symbols_in_string<-function(df_column,symbol="T"){
+  n_of_symbols<-stringr::str_count(toupper(df_column), symbol)
+  return(n_of_symbols)
+}
+
+#' Get substring of date to eliminate unnecessary part
+#'
+#' @param df_column date column or vector with dates
+#' @param symbol symbol that needs to be found, by default "T"
+#' @author Lukasz Andrzejewski
+#' @return substring of date from position 1 to position where last "symbol" is located
+remove_unnecessary_part_of_date<- function(df_column,symbol="T"){
+  last_symbol_position<-unlist(gregexpr(symbol,toupper(df_column)))[-1]
+  substring_from_1_to_last_symbol<-substr(df_column,1,last_symbol_position - 1)
+  return(substring_from_1_to_last_symbol)
+}
+
 #' Additional step for YMD date type
 #'
 #' @param df_column data frame date column or vector with dates
@@ -92,13 +163,25 @@ remove_no_date_characters<- function(df_column,symbols="[;:+]"){
 #' the left site of letter "T"
 
 prepare_date<-function(df_column){
+  df_column<-get_abbreviated_month_name(df_column)
   df_column<-get_up_to_12_char(df_column)
   df_column<-remove_no_date_characters(df_column)
   df_column<-stringr::str_trim(df_column)
-  df_column_ymd<-ifelse(grepl("T",df_column) & !is.na(df_column),
-         stringr::str_split_fixed(df_column,"T",n=2)[,1],
-         ifelse(nchar(stringr::str_split_fixed(df_column, " ",n=4)[,1])>4,
-          stringr::str_split_fixed(df_column, " ",n=4)[,1],df_column))
+  df_column_ymd<-ifelse(grepl("T",toupper(df_column)) &
+                          !is.na(df_column) &
+                          get_number_of_symbols_in_string(df_column)==1 &
+                          !grepl("august|october|oct",df_column,ignore.case = TRUE),
+                stringr::str_split_fixed(toupper(df_column),"T",n=2)[,1],
+
+                ifelse(grepl("T",toupper(df_column)) &
+                !is.na(df_column) &
+                get_number_of_symbols_in_string(df_column)>1,
+                remove_unnecessary_part_of_date(df_column),
+
+                ifelse(nchar(stringr::str_split_fixed(df_column, " ",n=4)[,1])>4,
+                stringr::str_split_fixed(df_column, " ",n=4)[,1],
+                df_column)))
+
   return(df_column_ymd)
 }
 
@@ -109,8 +192,9 @@ prepare_date<-function(df_column){
 #' @return logical vector, TRUE if date format is YMD
 
 find_ymd_date_format<-function(df_column){
-  ymd_date<-suppressWarnings({!(is.na(df_column) | is.na(lubridate::ymd(df_column)) |
-            df_column=="" | df_column==" ")})
+  prepare_ymd_date<-prepare_date(df_column)
+  ymd_date<-suppressWarnings({!(is.na(prepare_ymd_date) | is.na(lubridate::ymd(prepare_ymd_date)) |
+                                  prepare_ymd_date=="" | prepare_ymd_date==" ")})
   return(ymd_date)
 }
 
@@ -121,8 +205,9 @@ find_ymd_date_format<-function(df_column){
 #' @return logical vector, TRUE if date format is DMY
 
 find_dmy_date_format<-function(df_column){
-  dmy_date<-suppressWarnings({!(is.na(df_column) | is.na(lubridate::dmy(df_column)) |
-                                  df_column=="" | df_column==" ")})
+  prepare_dmy_date<-prepare_date(df_column)
+  dmy_date<-suppressWarnings({!(is.na(prepare_dmy_date) | is.na(lubridate::dmy(prepare_dmy_date)) |
+                                  prepare_dmy_date=="" | prepare_dmy_date==" ")})
   return(dmy_date)
 }
 
@@ -133,8 +218,9 @@ find_dmy_date_format<-function(df_column){
 #' @return logical vector, TRUE if date format is MDY
 
 find_mdy_date_format<-function(df_column){
-  mdy_date<-suppressWarnings({!(is.na(df_column) | is.na(lubridate::mdy(df_column)) |
-                                  df_column=="" | df_column==" ")})
+  prepare_mdy_date<-prepare_date(df_column)
+  mdy_date<-suppressWarnings({!(is.na(prepare_mdy_date) | is.na(lubridate::mdy(prepare_mdy_date)) |
+                                  prepare_mdy_date=="" | prepare_mdy_date==" ")})
   return(mdy_date)
 }
 
@@ -145,8 +231,9 @@ find_mdy_date_format<-function(df_column){
 #' @return logical vector, TRUE if date format is MYD
 
 find_myd_date_format<-function(df_column){
-  myd_date<-suppressWarnings({!(is.na(df_column) | is.na(lubridate::myd(df_column)) |
-                                  df_column=="" | df_column==" ")})
+  prepare_myd_date<-prepare_date(df_column)
+  myd_date<-suppressWarnings({!(is.na(prepare_myd_date) | is.na(lubridate::myd(prepare_myd_date)) |
+                                  prepare_myd_date=="" | prepare_myd_date==" ")})
   return(myd_date)
 }
 
@@ -157,8 +244,9 @@ find_myd_date_format<-function(df_column){
 #' @return logical vector, TRUE if date format is YDM
 
 find_ydm_date_format<-function(df_column){
-  ydm_date<-suppressWarnings({!(is.na(df_column) | is.na(lubridate::ydm(df_column)) |
-                                  df_column=="" | df_column==" ")})
+  prepare_ydm_date<-prepare_date(df_column)
+  ydm_date<-suppressWarnings({!(is.na(prepare_ydm_date) | is.na(lubridate::ydm(prepare_ydm_date)) |
+                                  prepare_ydm_date=="" | prepare_ydm_date==" ")})
   return(ydm_date)
 }
 
@@ -170,8 +258,9 @@ find_ydm_date_format<-function(df_column){
 #' @return logical vector, TRUE if date format is DYM
 
 find_dym_date_format<-function(df_column){
-  dym_date<-suppressWarnings({!(is.na(df_column) | is.na(lubridate::dym(df_column)) |
-                                  df_column=="" | df_column==" ")})
+  prepare_dym_date<-prepare_date(df_column)
+  dym_date<-suppressWarnings({!(is.na(prepare_dym_date) | is.na(lubridate::dym(prepare_dym_date)) |
+                                  prepare_dym_date=="" | prepare_dym_date==" ")})
   return(dym_date)
 }
 
@@ -201,7 +290,7 @@ get_max_score_within_data_formats<-function(df_column){
 #' @author Lukasz Andrzejewski
 #' @return logical vector, TRUE if most probable date format is YMD
 choose_ymd_format<-function(df_column){
-  dates_yn<-find_ymd_date_format(df_column) & sum(find_ymd_date_format(df_column))==get_max_score_within_data_formats(df_column)
+  dates_yn<-find_only_dates(df_column) & find_ymd_date_format(df_column) & sum(find_ymd_date_format(df_column))==get_max_score_within_data_formats(df_column)
   return(dates_yn)
 }
 
@@ -211,7 +300,7 @@ choose_ymd_format<-function(df_column){
 #' @author Lukasz Andrzejewski
 #' @return logical vector, TRUE if most probable date format is DMY
 choose_dmy_format<-function(df_column){
-  dates_yn<-find_dmy_date_format(df_column) & sum(find_dmy_date_format(df_column))==get_max_score_within_data_formats(df_column)
+  dates_yn<-find_only_dates(df_column) & find_dmy_date_format(df_column) & sum(find_dmy_date_format(df_column))==get_max_score_within_data_formats(df_column)
   return(dates_yn)
 }
 
@@ -221,7 +310,7 @@ choose_dmy_format<-function(df_column){
 #' @author Lukasz Andrzejewski
 #' @return logical vector, TRUE if most probable date format is MDY
 choose_mdy_format<-function(df_column){
-  dates_yn<-find_mdy_date_format(df_column) & sum(find_mdy_date_format(df_column))==get_max_score_within_data_formats(df_column)
+  dates_yn<-find_only_dates(df_column) & find_mdy_date_format(df_column) & sum(find_mdy_date_format(df_column))==get_max_score_within_data_formats(df_column)
   return(dates_yn)
 }
 
@@ -231,7 +320,7 @@ choose_mdy_format<-function(df_column){
 #' @author Lukasz Andrzejewski
 #' @return logical vector, TRUE if most probable date format is YDM
 choose_ydm_format<-function(df_column){
-  dates_yn<-find_ydm_date_format(df_column) & sum(find_ydm_date_format(df_column))==get_max_score_within_data_formats(df_column)
+  dates_yn<-find_only_dates(df_column) & find_ydm_date_format(df_column) & sum(find_ydm_date_format(df_column))==get_max_score_within_data_formats(df_column)
   return(dates_yn)
 }
 
@@ -241,7 +330,7 @@ choose_ydm_format<-function(df_column){
 #' @author Lukasz Andrzejewski
 #' @return logical vector, TRUE if most probable date format is MYD
 choose_myd_format<-function(df_column){
-  dates_yn<-find_myd_date_format(df_column) & sum(find_myd_date_format(df_column))==get_max_score_within_data_formats(df_column)
+  dates_yn<-find_only_dates(df_column) & find_myd_date_format(df_column) & sum(find_myd_date_format(df_column))==get_max_score_within_data_formats(df_column)
   return(dates_yn)
 }
 
@@ -251,6 +340,6 @@ choose_myd_format<-function(df_column){
 #' @author Lukasz Andrzejewski
 #' @return logical vector, TRUE if most probable date format is DYM
 choose_dym_format<-function(df_column){
-  dates_yn<-find_dym_date_format(df_column) & sum(find_dym_date_format(df_column))==get_max_score_within_data_formats(df_column)
+  dates_yn<-find_only_dates(df_column) & find_dym_date_format(df_column) & sum(find_dym_date_format(df_column))==get_max_score_within_data_formats(df_column)
   return(dates_yn)
 }

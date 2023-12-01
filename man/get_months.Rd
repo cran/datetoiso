@@ -2,7 +2,7 @@
 % Please edit documentation in R/date_to_iso.R
 \name{get_months}
 \alias{get_months}
-\title{List month names in lower case}
+\title{List month names: full names and abbreviated  names in lower case}
 \usage{
 get_months()
 }
@@ -10,7 +10,7 @@ get_months()
 full names and abbreviations of months
 }
 \description{
-List month names in lower case
+List month names: full names and abbreviated  names in lower case
 }
 \author{
 Lukasz Andrzejewski

@@ -2,7 +2,7 @@ Package: datetoiso
 Type: Package
 Title: Modify Dates to ISO Standard ("International Organization for
         Standardization")
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Lukasz", "Andrzejewski", email = "lukasz.coding@gmail.com",
   role = c("aut", "cre"))
 URL: https://github.com/andzoluk
@@ -15,8 +15,8 @@ Suggests: testthat (>= 3.0.0)
 Config/testthat/edition: 3
 RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2023-02-28 08:15:27 UTC; Andrzejewski
+Packaged: 2023-11-30 23:25:38 UTC; Andrzejewski
 Author: Lukasz Andrzejewski [aut, cre]
 Maintainer: Lukasz Andrzejewski <lukasz.coding@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-02-28 17:22:30 UTC
+Date/Publication: 2023-12-01 10:10:05 UTC

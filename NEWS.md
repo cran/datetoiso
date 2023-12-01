@@ -1,6 +1,15 @@
-# datetoiso (development version)
+# datetoiso 0.2.0
 
-* 
+
+
+## Major changes
+
+* `viso()` now properly recognizes dates with 3 letters month names or full month names separated from time by 'T'
+
+## Minor improvements and bug fixes
+
+*
+
 # datetoiso 0.1.0
 
 ## Major changes
