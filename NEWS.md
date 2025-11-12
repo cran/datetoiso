@@ -1,3 +1,18 @@
+# datetoiso 1.0.0
+
+
+## Major changes
+
+* Introduced new function `impute_date()` for imputing missing **month** and/or **day** components
+  in partial date strings when the **year** is known.
+  - Supports both `"ymd"` and `"dmy"` input formats.
+  - Provides flag variables indicating the type of imputation performed (day, month, or both).
+  - Allows control over imputation direction using `"min"` (earliest date) or `"max"` (latest date).
+
+## Minor improvements and bug fixes
+
+*
+---
 # datetoiso 0.2.0
 
 

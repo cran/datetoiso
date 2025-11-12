@@ -14,9 +14,9 @@
 #' #month year day vector
 #' viso(c("Mar-2022-12","Feb-2022-21"))
 #' @export
-viso<-function(df_column){
-  df_column<-prepare_date(df_column)
-  df_column_to_date<-ifelse(choose_ymd_format(df_column),
+viso <- function(df_column){
+  df_column <- prepare_date(df_column)
+  df_column_to_date <- ifelse(choose_ymd_format(df_column),
                             format(lubridate::ymd(df_column)),
 
                             ifelse(choose_dmy_format(df_column),

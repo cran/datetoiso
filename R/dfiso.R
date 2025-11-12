@@ -9,8 +9,8 @@
 #' dfiso(data.frame(date1=c("13-02-2022","13/Feb/2022","13-Feb-2022")))
 #'
 #' @export
-dfiso<- function(df){
-  df<-sapply(df, FUN = function(X) viso(X))
-  df<-as.data.frame(df)
+dfiso <- function(df){
+  df <- sapply(df, FUN = function(X) viso(X))
+  df <- as.data.frame(df)
   return(df)
 }
