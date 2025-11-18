@@ -2,20 +2,38 @@
 % Please edit documentation in R/date_to_iso.R
 \name{remove_no_date_characters}
 \alias{remove_no_date_characters}
-\title{Function remove symbols}
+\title{Remove unnecessary characters from date-like strings}
 \usage{
-remove_no_date_characters(df_column, symbols = "[;:+]")
+remove_no_date_characters(df_column)
 }
 \arguments{
-\item{df_column}{data frame column or vector from which symbols need to be removed}
-
-\item{symbols}{by default ; : +}
+\item{df_column}{A character vector (or data frame column) containing date-like strings.
+Factors will be coerced to character. NA values are preserved.}
 }
 \value{
-by default delete semicolon, colon and plus sign from vector or data frame
+A character vector of the same length as \code{df_column}, with
+        unwanted characters removed. Only digits, letters from month names,
+        and selected extra characters are kept.
 }
 \description{
-Function remove symbols
+This function cleans a character vector or data frame column containing
+date-like strings by removing all characters that are not needed for
+parsing or recognizing dates. It preserves:
+\itemize{
+  \item Digits (0–9)
+  \item Letters that appear in any full month name (e.g., "January" → "J, A, N, U, R, Y")
+  \item Selected extra allowed characters: space (" "), dash ("-"), slash ("/"), and "k"/"K"
+}
+All other characters (symbols, punctuation, letters not in month names) are removed.
+}
+\details{
+The function works as follows:
+\enumerate{
+  \item Converts input to character vector.
+  \item Generates the set of letters present in all English month names (case-insensitive).
+  \item Constructs a regex pattern to match all characters that are NOT digits, allowed letters, or allowed extra symbols.
+  \item Uses \code{stringr::str_replace_all()} to remove unwanted characters.
+}
 }
 \author{
 Lukasz Andrzejewski

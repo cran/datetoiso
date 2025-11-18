@@ -1,3 +1,17 @@
+# datetoiso 1.1.1
+
+# datetoiso 1.1.0
+## Added
+- `clean_date()` exported: prepares and normalizes date-like strings before YMD conversion.
+
+## Changed
+- `viso()` updated to better recognize unusual date types.
+- `impute_date()` can now handle missing year ("2024") or year+month ("01-2025", "2025-01").
+- Updated documentation, examples, and unit tests.
+
+## Fixed
+- Minor bug fixes and internal improvements.
+
 # datetoiso 1.0.0
 
 

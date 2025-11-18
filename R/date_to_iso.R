@@ -66,7 +66,7 @@ get_abbreviated_month_name <- function(df_column)  {
 #' @return return up to 12 characters
 
 get_up_to_12_char <- function(df_column)  {
-  substr_up_to_12_chars <- substr(df_column, 0, 12)
+  substr_up_to_12_chars <- substr(trimws(df_column), 0, 12)
   return(substr_up_to_12_chars)
 }
 
@@ -119,17 +119,59 @@ find_unknow_date <- function(df_column) {
 }
 
 
-
-#' Function remove symbols
+#' Remove unnecessary characters from date-like strings
 #'
-#' @param df_column data frame column or vector from which symbols need to be removed
-#' @param symbols by default ; : +
+#' This function cleans a character vector or data frame column containing
+#' date-like strings by removing all characters that are not needed for
+#' parsing or recognizing dates. It preserves:
+#' \itemize{
+#'   \item Digits (0–9)
+#'   \item Letters that appear in any full month name (e.g., "January" → "J, A, N, U, R, Y")
+#'   \item Selected extra allowed characters: space (" "), dash ("-"), slash ("/"), and "k"/"K"
+#' }
+#' All other characters (symbols, punctuation, letters not in month names) are removed.
+#'
+#' @param df_column A character vector (or data frame column) containing date-like strings.
+#'                  Factors will be coerced to character. NA values are preserved.
+#'
 #' @author Lukasz Andrzejewski
-#' @return by default delete semicolon, colon and plus sign from vector or data frame
+#'
+#' @return A character vector of the same length as \code{df_column}, with
+#'         unwanted characters removed. Only digits, letters from month names,
+#'         and selected extra characters are kept.
+#'
+#' @details
+#' The function works as follows:
+#' \enumerate{
+#'   \item Converts input to character vector.
+#'   \item Generates the set of letters present in all English month names (case-insensitive).
+#'   \item Constructs a regex pattern to match all characters that are NOT digits, allowed letters, or allowed extra symbols.
+#'   \item Uses \code{stringr::str_replace_all()} to remove unwanted characters.
+#' }
+remove_no_date_characters <- function(df_column) {
 
-remove_no_date_characters <- function(df_column,symbols="[;:+]") {
-  df_column <- stringr::str_replace_all(df_column, pattern = symbols, replacement = "")
-  return(df_column)
+  df_char <- as.character(df_column)
+
+  months_full_name <- tolower(month.name)
+  months_full_name <- paste0(months_full_name, collapse = "")
+  unique_months_letters <- unique(strsplit(months_full_name, split = "")[[1]])
+
+  unique_months_letters_lower <- paste0(unique_months_letters, collapse = "")
+  unique_months_letters_upper <-toupper(paste0(unique_months_letters, collapse = ""))
+
+  extra_allowed_escaped <- c(" ", "\\-", "/", "k", "K")
+
+
+  symbols_letters_numbers_to_keep <- paste0("0-9", unique_months_letters_lower, unique_months_letters_upper,
+                                            paste0(extra_allowed_escaped, collapse = ""))
+
+  symbols_letters_numbers_to_keep <- paste0("[^", symbols_letters_numbers_to_keep, "]")
+
+  cleaned <- stringr::str_replace_all(df_char, pattern = symbols_letters_numbers_to_keep, replacement = "")
+
+
+  return(cleaned)
+
 }
 
 #' Function to find number of symbols in date
@@ -155,14 +197,44 @@ remove_unnecessary_part_of_date <-  function(df_column, symbol = "T")  {
   return(substring_from_1_to_last_symbol)
 }
 
-#' Additional step for YMD date type
+#' Prepare and normalize date-like strings before YMD conversion
 #'
-#' @param df_column data frame date column or vector with dates
+#' This function applies a series of cleaning and normalization steps to
+#' strings representing dates. It is intended for use before parsing dates
+#' into a YMD (year–month–day) format. The function standardizes month names,
+#' trims whitespace, removes invalid characters, and handles strings that
+#' contain a letter "T" (common in timestamp formats).
+#'
+#' The processing includes:
+#' \itemize{
+#'   \item Converting full month names to abbreviated forms
+#'         (via \code{get_abbreviated_month_name()}).
+#'   \item Limiting the string to the first 12 characters
+#'         (via \code{get_up_to_12_char()}).
+#'   \item Removing non-date characters
+#'         (via \code{remove_no_date_characters()}).
+#'   \item Trimming whitespace at the start and end of the string.
+#'   \item Handling timestamps or strings containing the letter "T":
+#'     \itemize{
+#'       \item If "T" appears exactly once and the string does not contain
+#'             "August" or "October", keep only the substring before "T".
+#'       \item If "T" appears multiple times, remove the unnecessary trailing
+#'             part using \code{remove_unnecessary_part_of_date()}.
+#'     }
+#'   \item If the first token of the string (separated by a space) is longer
+#'         than four characters, return only that first token.
+#' }
+#'
+#' @param df_column A character vector or data frame column containing raw
+#' date-like strings to be cleaned.
+#' @return A character vector of cleaned date strings, with a maximum length
+#' of 12 characters, trimmed of whitespace, and with any timestamp-like
+#' "T" components removed when appropriate.
 #' @author Lukasz Andrzejewski
-#' @return output up to 12 characters, remove whitespace from start and end of string, keep characters from
-#' the left site of letter "T"
+#' @examples clean_date(c("2024-01-10T15:30:00", "2024 AUGUST 12", "20250101"))
+#' @export
 
-prepare_date <- function(df_column)  {
+clean_date <- function(df_column)  {
   df_column <- get_abbreviated_month_name(df_column)
   df_column <- get_up_to_12_char(df_column)
   df_column <- remove_no_date_characters(df_column)
@@ -192,7 +264,7 @@ prepare_date <- function(df_column)  {
 #' @return logical vector, TRUE if date format is YMD
 
 find_ymd_date_format <- function(df_column)  {
-  prepare_ymd_date <- prepare_date(df_column)
+  prepare_ymd_date <- clean_date(df_column)
   ymd_date <- suppressWarnings({!(is.na(prepare_ymd_date) | is.na(lubridate::ymd(prepare_ymd_date)) |
                                   prepare_ymd_date == "" | prepare_ymd_date == " ")})
   return(ymd_date)
@@ -205,7 +277,7 @@ find_ymd_date_format <- function(df_column)  {
 #' @return logical vector, TRUE if date format is DMY
 
 find_dmy_date_format <- function(df_column)  {
-  prepare_dmy_date <- prepare_date(df_column)
+  prepare_dmy_date <- clean_date(df_column)
   dmy_date <- suppressWarnings({!(is.na(prepare_dmy_date) | is.na(lubridate::dmy(prepare_dmy_date)) |
                                   prepare_dmy_date == "" | prepare_dmy_date == " ")})
   return(dmy_date)
@@ -218,7 +290,7 @@ find_dmy_date_format <- function(df_column)  {
 #' @return logical vector, TRUE if date format is MDY
 
 find_mdy_date_format <- function(df_column)  {
-  prepare_mdy_date <- prepare_date(df_column)
+  prepare_mdy_date <- clean_date(df_column)
   mdy_date <- suppressWarnings({!(is.na(prepare_mdy_date) | is.na(lubridate::mdy(prepare_mdy_date)) |
                                   prepare_mdy_date == "" | prepare_mdy_date == " ")})
   return(mdy_date)
@@ -231,7 +303,7 @@ find_mdy_date_format <- function(df_column)  {
 #' @return logical vector, TRUE if date format is MYD
 
 find_myd_date_format <- function(df_column)  {
-  prepare_myd_date <- prepare_date(df_column)
+  prepare_myd_date <- clean_date(df_column)
   myd_date <- suppressWarnings({!(is.na(prepare_myd_date) | is.na(lubridate::myd(prepare_myd_date)) |
                                   prepare_myd_date == "" | prepare_myd_date == " ")})
   return(myd_date)
@@ -244,7 +316,7 @@ find_myd_date_format <- function(df_column)  {
 #' @return logical vector, TRUE if date format is YDM
 
 find_ydm_date_format <- function(df_column)  {
-  prepare_ydm_date <- prepare_date(df_column)
+  prepare_ydm_date <- clean_date(df_column)
   ydm_date <- suppressWarnings({!(is.na(prepare_ydm_date) | is.na(lubridate::ydm(prepare_ydm_date)) |
                                   prepare_ydm_date == "" | prepare_ydm_date == " ")})
   return(ydm_date)
@@ -258,7 +330,7 @@ find_ydm_date_format <- function(df_column)  {
 #' @return logical vector, TRUE if date format is DYM
 
 find_dym_date_format <- function(df_column)  {
-  prepare_dym_date <- prepare_date(df_column)
+  prepare_dym_date <- clean_date(df_column)
   dym_date <- suppressWarnings({!(is.na(prepare_dym_date) | is.na(lubridate::dym(prepare_dym_date)) |
                                   prepare_dym_date == "" | prepare_dym_date == " ")})
   return(dym_date)

@@ -2,7 +2,7 @@ Package: datetoiso
 Type: Package
 Title: Convert and Impute Dates to ISO Standard ("International
         Organization for Standardization")
-Version: 1.0.0
+Version: 1.1.1
 Authors@R: person("Lukasz", "Andrzejewski", email = "lukasz.coding@gmail.com",
   role = c("aut", "cre"))
 URL: https://github.com/andzoluk
@@ -20,8 +20,8 @@ Suggests: testthat (>= 3.0.0)
 Config/testthat/edition: 3
 RoxygenNote: 7.3.1
 NeedsCompilation: no
-Packaged: 2025-11-12 22:49:29 UTC; Andrzejewski
+Packaged: 2025-11-18 11:18:31 UTC; Andrzejewski
 Author: Lukasz Andrzejewski [aut, cre]
 Maintainer: Lukasz Andrzejewski <lukasz.coding@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-11-12 23:20:02 UTC
+Date/Publication: 2025-11-18 12:30:02 UTC

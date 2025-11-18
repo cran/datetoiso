@@ -71,6 +71,144 @@ test_that("check if impute_date works for parameter min_max = 'min'", {
   expected_f <- c("D", "D", "D")
   expect_equal(actual_f, expected_f)
 
+  ymd_day_blank <- data.frame(
+    day_un_month_numeric_hyphen = c(
+      "2023-05",
+      "2021-12",
+      "2022-07"
+    ),
+    day_un_month_character_hyphen = c(
+      "2023-May",
+      "2021-Dec",
+      "2022-Jul"
+    ),
+    day_un_month_character_blank = c(
+      "2023 May",
+      "2021 Dec",
+      "2022 Jul"),
+    day_un_month_numeric_slash = c(
+      "2023/05",
+      "2021/12",
+      "2022/07"
+    ),
+    day_un_month_character_slash = c(
+      "2023/May",
+      "2021/Dec",
+      "2022/Jul"
+    )
+  )
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_numeric_hyphen",
+                        suffix = "_DT", date_format = 'ymd', separator =  "-")
+  actual_f <- actual[["day_un_month_numeric_hyphen_DTF"]]
+  actual <- actual[["day_un_month_numeric_hyphen_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_hyphen",
+                        suffix = "_DT", date_format = 'ymd', separator =  "-", day = "UN")
+  actual_f <- actual[["day_un_month_character_hyphen_DTF"]]
+  actual <- actual[["day_un_month_character_hyphen_DT"]]
+  expected <- c("2023-05-01", "2021-12-01","2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_blank",
+                        suffix = "_DT", date_format = 'ymd', separator =  " ", day = "UN")
+  actual_f <- actual[["day_un_month_character_blank_DTF"]]
+  actual <- actual[["day_un_month_character_blank_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_numeric_slash",
+                        suffix = "_DT", date_format = 'ymd', separator =  "/", day = "UN")
+  actual_f <- actual[["day_un_month_numeric_slash_DTF"]]
+  actual <- actual[["day_un_month_numeric_slash_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+
+  ymd_day_blank <- data.frame(
+    day_un_month_numeric_hyphen = c(
+      "2023-05-01",
+      "2021-12",
+      "2022-07"
+    ),
+    day_un_month_character_hyphen = c(
+      "2023-May-01",
+      "2021-Dec",
+      "2022-Jul"
+    ),
+    day_un_month_character_blank = c(
+      "2023 May 01",
+      "2021 Dec",
+      "2022 Jul"),
+    day_un_month_numeric_slash = c(
+      "2023/05/01",
+      "2021/12",
+      "2022/07"
+    ),
+    day_un_month_character_slash = c(
+      "2023/May/01",
+      "2021/Dec",
+      "2022/Jul"
+    )
+  )
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_numeric_hyphen",
+                        suffix = "_DT", date_format = 'ymd', separator =  "-")
+  actual_f <- actual[["day_un_month_numeric_hyphen_DTF"]]
+  actual <- actual[["day_un_month_numeric_hyphen_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_hyphen",
+                        suffix = "_DT", date_format = 'ymd', separator =  "-", day = "UN")
+  actual_f <- actual[["day_un_month_character_hyphen_DTF"]]
+  actual <- actual[["day_un_month_character_hyphen_DT"]]
+  expected <- c("2023-05-01", "2021-12-01","2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_blank",
+                        suffix = "_DT", date_format = 'ymd', separator =  " ", day = "UN")
+  actual_f <- actual[["day_un_month_character_blank_DTF"]]
+  actual <- actual[["day_un_month_character_blank_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_numeric_slash",
+                        suffix = "_DT", date_format = 'ymd', separator =  "/", day = "UN")
+  actual_f <- actual[["day_un_month_numeric_slash_DTF"]]
+  actual <- actual[["day_un_month_numeric_slash_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_slash",
+                        suffix = "_DT", date_format = 'ymd', separator =  "/", day = "UN")
+  actual_f <- actual[["day_un_month_character_slash_DTF"]]
+  actual <- actual[["day_un_month_character_slash_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
   ymd_month_un <- data.frame(
     month_un_month_numeric_hyphen = c(
       "2023-UN-10",
@@ -291,6 +429,149 @@ test_that("check if impute_date works for parameter min_max = 'min'", {
   expect_equal(actual_f, expected_f)
 
 
+  dmy_day_blank <- data.frame(
+    day_un_month_numeric_hyphen = c(
+      "05-2023",
+      "12-2021",
+      "07-2022"
+    ),
+    day_un_month_character_hyphen = c(
+      "May-2023",
+      "Dec-2021",
+      "Jul-2022"
+    ),
+    day_un_month_character_blank = c(
+      "May 2023",
+      "Dec 2021",
+      "Jul 2022"),
+    day_un_month_numeric_slash = c(
+      "05/2023",
+      "12/2021",
+      "07/2022"
+    ),
+    day_un_month_character_slash = c(
+      "MAY/2023",
+      "DEC/2021",
+      "JUL/2022"
+    )
+  )
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_numeric_hyphen",
+                        suffix = "_DT", date_format = 'dmy', separator =  "-", day = "UN")
+  actual_f <- actual[["day_un_month_numeric_hyphen_DTF"]]
+  actual <- actual[["day_un_month_numeric_hyphen_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_hyphen",
+                        suffix = "_DT", date_format = 'dmy', separator =  "-", day = "UN")
+  actual_f <- actual[["day_un_month_character_hyphen_DTF"]]
+  actual <- actual[["day_un_month_character_hyphen_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_blank",
+                        suffix = "_DT", date_format = 'dmy', separator =  " ", day = "UN")
+  actual_f <- actual[["day_un_month_character_blank_DTF"]]
+  actual <- actual[["day_un_month_character_blank_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_numeric_slash",
+                        suffix = "_DT", date_format = 'dmy', separator =  "/", day = "UN")
+  actual_f <- actual[["day_un_month_numeric_slash_DTF"]]
+  actual <- actual[["day_un_month_numeric_slash_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_slash",
+                        suffix = "_DT", date_format = 'dmy', separator =  "/", day = "UN")
+  actual_f <- actual[["day_un_month_character_slash_DTF"]]
+  actual <- actual[["day_un_month_character_slash_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+
+  dmy_day_blank <- data.frame(
+    day_un_month_numeric_hyphen = c(
+      "01-05-2023",
+      "12-2021",
+      "07-2022"
+    ),
+    day_un_month_character_hyphen = c(
+      "01-May-2023",
+      "Dec-2021",
+      "Jul-2022"
+    ),
+    day_un_month_character_blank = c(
+      "01 May 2023",
+      "Dec 2021",
+      "Jul 2022"),
+    day_un_month_numeric_slash = c(
+      "01/05/2023",
+      "12/2021",
+      "07/2022"
+    ),
+    day_un_month_character_slash = c(
+      "01/MAY/2023",
+      "DEC/2021",
+      "JUL/2022"
+    )
+  )
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_numeric_hyphen",
+                        suffix = "_DT", date_format = 'dmy', separator =  "-", day = "UN")
+  actual_f <- actual[["day_un_month_numeric_hyphen_DTF"]]
+  actual <- actual[["day_un_month_numeric_hyphen_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_hyphen",
+                        suffix = "_DT", date_format = 'dmy', separator =  "-", day = "UN")
+  actual_f <- actual[["day_un_month_character_hyphen_DTF"]]
+  actual <- actual[["day_un_month_character_hyphen_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_blank",
+                        suffix = "_DT", date_format = 'dmy', separator =  " ", day = "UN")
+  actual_f <- actual[["day_un_month_character_blank_DTF"]]
+  actual <- actual[["day_un_month_character_blank_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_numeric_slash",
+                        suffix = "_DT", date_format = 'dmy', separator =  "/", day = "UN")
+  actual_f <- actual[["day_un_month_numeric_slash_DTF"]]
+  actual <- actual[["day_un_month_numeric_slash_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_slash",
+                        suffix = "_DT", date_format = 'dmy', separator =  "/", day = "UN")
+  actual_f <- actual[["day_un_month_character_slash_DTF"]]
+  actual <- actual[["day_un_month_character_slash_DT"]]
+  expected <- c("2023-05-01", "2021-12-01", "2022-07-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
 
   dmy_day_un_month_unk_year_unkn <- data.frame(
     day_un_month_unk_year_unkn_hyphen = c(
@@ -320,7 +601,6 @@ test_that("check if impute_date works for parameter min_max = 'min'", {
   expect_true(all(is.na(actual)))
   expected_f <- c(NA_character_, NA_character_, NA_character_)
   expect_equal(actual_f, expected_f)
-
 
 
   ymd_day_un_month_unk_year_unkn <- data.frame(
@@ -442,8 +722,123 @@ test_that("check if impute_date works for parameter min_max = 'min'", {
   expect_equal(actual, expected)
   expected_f <-c(NA_character_, NA_character_, NA_character_)
   expect_equal(actual_f, expected_f)
-})
 
+
+  ymd_day_month_blank <- data.frame(
+    day_un_month_un_hyphen = c(
+      "2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_un_blank = c(
+      "2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_unk_hyphen = c(
+      "2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_unk_blank = c(
+      "2023",
+      "2020",
+      "2019")
+  )
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_un_hyphen",
+                        separator = "-", month = "UN", suffix = "_DT")
+  actual_f <- actual[["day_un_month_un_hyphen_DTF"]]
+  actual <- actual[["day_un_month_un_hyphen_DT"]]
+  expected <- c("2023-01-01","2020-01-01","2019-01-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D, M", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_un_blank",
+                        separator = " ", month = "UN", suffix = "_DT")
+  actual_f <- actual[["day_un_month_un_blank_DTF"]]
+  actual <- actual[["day_un_month_un_blank_DT"]]
+  expected <- c("2023-01-01","2020-01-01","2019-01-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D, M", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_unk_hyphen",
+                        separator = "-", month = "UNK", suffix = "_DT")
+  actual_f <- actual[["day_un_month_unk_hyphen_DTF"]]
+  actual <- actual[["day_un_month_unk_hyphen_DT"]]
+  expected <- c("2023-01-01","2020-01-01","2019-01-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D, M", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_unk_blank",
+                        separator = " ", month = "UNK", suffix = "_DT")
+  actual_f <- actual[["day_un_month_unk_blank_DTF"]]
+  actual <- actual[["day_un_month_unk_blank_DT"]]
+  expected <- c("2023-01-01","2020-01-01","2019-01-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D, M", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+
+  ymd_day_month_blank <- data.frame(
+    day_un_month_un_hyphen = c(
+      "01-2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_un_blank = c(
+      "01-01-2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_unk_hyphen = c(
+      "Dec-2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_unk_blank = c(
+      "1-January-2023",
+      "2020",
+      "2019")
+  )
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_un_hyphen", date_format = "dmy",
+                        separator = "-", month = "UN", suffix = "_DT")
+  actual_f <- actual[["day_un_month_un_hyphen_DTF"]]
+  actual <- actual[["day_un_month_un_hyphen_DT"]]
+  expected <- c("2023-01-01","2020-01-01","2019-01-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_un_blank", date_format = "dmy",
+                        separator = "-", month = "UN", suffix = "_DT")
+  actual_f <- actual[["day_un_month_un_blank_DTF"]]
+  actual <- actual[["day_un_month_un_blank_DT"]]
+  expected <- c("2023-01-01","2020-01-01","2019-01-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_unk_hyphen", date_format = "dmy",
+                        separator = "-", month = "UNK", suffix = "_DT")
+  actual_f <- actual[["day_un_month_unk_hyphen_DTF"]]
+  actual <- actual[["day_un_month_unk_hyphen_DT"]]
+  expected <- c("2023-12-01","2020-01-01","2019-01-01")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_unk_blank", date_format = "dmy",
+                        separator = "-", month = "UNK", suffix = "_DT")
+  actual_f <- actual[["day_un_month_unk_blank_DTF"]]
+  actual <- actual[["day_un_month_unk_blank_DT"]]
+  expected <- c("2023-01-01","2020-01-01","2019-01-01")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+})
 
 
 
@@ -520,6 +915,153 @@ test_that("check if impute_date works for parameter min_max = 'max'", {
   expect_equal(actual, expected)
   expected_f <- c("D", "D", "D")
   expect_equal(actual_f, expected_f)
+
+
+  ymd_day_blank <- data.frame(
+    day_un_month_numeric_hyphen = c(
+      "2023-05",
+      "2021-12",
+      "2022-07"
+    ),
+    day_un_month_character_hyphen = c(
+      "2023-May",
+      "2021-Dec",
+      "2022-Jul"
+    ),
+    day_un_month_character_blank = c(
+      "2023 May",
+      "2021 Dec",
+      "2022 Jul"),
+    day_un_month_numeric_slash = c(
+      "2023/05",
+      "2021/12",
+      "2022/07"
+    ),
+    day_un_month_character_slash = c(
+      "2023/May",
+      "2021/Dec",
+      "2022/Jul"
+    )
+  )
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_numeric_hyphen",
+                        suffix = "_DT", date_format = 'ymd', separator =  "-", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_numeric_hyphen_DTF"]]
+  actual <- actual[["day_un_month_numeric_hyphen_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_hyphen",
+                        suffix = "_DT", date_format = 'ymd', separator =  "-", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_hyphen_DTF"]]
+  actual <- actual[["day_un_month_character_hyphen_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_blank",
+                        suffix = "_DT", date_format = 'ymd', separator =  " ", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_blank_DTF"]]
+  actual <- actual[["day_un_month_character_blank_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_numeric_slash",
+                        suffix = "_DT", date_format = 'ymd', separator =  "/", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_numeric_slash_DTF"]]
+  actual <- actual[["day_un_month_numeric_slash_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_slash",
+                        suffix = "_DT", date_format = 'ymd', separator =  "/", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_slash_DTF"]]
+  actual <- actual[["day_un_month_character_slash_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+
+  ymd_day_blank <- data.frame(
+    day_un_month_numeric_hyphen = c(
+      "2023-05-31",
+      "2021-12",
+      "2022-07"
+    ),
+    day_un_month_character_hyphen = c(
+      "2023-May-31",
+      "2021-Dec",
+      "2022-Jul"
+    ),
+    day_un_month_character_blank = c(
+      "2023 May 31",
+      "2021 Dec",
+      "2022 Jul"),
+    day_un_month_numeric_slash = c(
+      "2023/05/31",
+      "2021/12",
+      "2022/07"
+    ),
+    day_un_month_character_slash = c(
+      "2023/May/31",
+      "2021/Dec",
+      "2022/Jul"
+    )
+  )
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_numeric_hyphen",
+                        suffix = "_DT", date_format = 'ymd', separator =  "-", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_numeric_hyphen_DTF"]]
+  actual <- actual[["day_un_month_numeric_hyphen_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_hyphen",
+                        suffix = "_DT", date_format = 'ymd', separator =  "-", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_hyphen_DTF"]]
+  actual <- actual[["day_un_month_character_hyphen_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_blank",
+                        suffix = "_DT", date_format = 'ymd', separator =  " ", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_blank_DTF"]]
+  actual <- actual[["day_un_month_character_blank_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_numeric_slash",
+                        suffix = "_DT", date_format = 'ymd', separator =  "/", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_numeric_slash_DTF"]]
+  actual <- actual[["day_un_month_numeric_slash_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_blank, column_name = "day_un_month_character_slash",
+                        suffix = "_DT", date_format = 'ymd', separator =  "/", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_slash_DTF"]]
+  actual <- actual[["day_un_month_character_slash_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
 
   ymd_month_un <- data.frame(
     month_un_month_numeric_hyphen = c(
@@ -669,6 +1211,122 @@ test_that("check if impute_date works for parameter min_max = 'max'", {
   expect_equal(actual_f, expected_f)
 
 
+  ymd_day_month_blank <- data.frame(
+    day_un_month_un_hyphen = c(
+      "2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_un_blank = c(
+      "2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_unk_hyphen = c(
+      "2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_unk_blank = c(
+      "2023",
+      "2020",
+      "2019")
+  )
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_un_hyphen",
+                        separator = "-", month = "UN", suffix = "_DT", min_max = 'max')
+  actual_f <- actual[["day_un_month_un_hyphen_DTF"]]
+  actual <- actual[["day_un_month_un_hyphen_DT"]]
+  expected <- c("2023-12-31","2020-12-31","2019-12-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D, M", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_un_blank",
+                        separator = " ", month = "UN", suffix = "_DT", min_max = 'max')
+  actual_f <- actual[["day_un_month_un_blank_DTF"]]
+  actual <- actual[["day_un_month_un_blank_DT"]]
+  expected <- c("2023-12-31","2020-12-31","2019-12-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D, M", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_unk_hyphen",
+                        separator = "-", month = "UNK", suffix = "_DT", min_max = 'max')
+  actual_f <- actual[["day_un_month_unk_hyphen_DTF"]]
+  actual <- actual[["day_un_month_unk_hyphen_DT"]]
+  expected <- c("2023-12-31","2020-12-31","2019-12-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D, M", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_unk_blank",
+                        separator = " ", month = "UNK", suffix = "_DT", min_max = 'max')
+  actual_f <- actual[["day_un_month_unk_blank_DTF"]]
+  actual <- actual[["day_un_month_unk_blank_DT"]]
+  expected <- c("2023-12-31","2020-12-31","2019-12-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D, M", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+
+  ymd_day_month_blank <- data.frame(
+    day_un_month_un_hyphen = c(
+      "12-2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_un_blank = c(
+      "31-12-2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_unk_hyphen = c(
+      "Dec-2023",
+      "2020",
+      "2019"
+    ),
+    day_un_month_unk_blank = c(
+      "31-December-2023",
+      "2020",
+      "2019")
+  )
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_un_hyphen", date_format = "dmy",
+                        separator = "-", month = "UN", suffix = "_DT", min_max = 'max')
+  actual_f <- actual[["day_un_month_un_hyphen_DTF"]]
+  actual <- actual[["day_un_month_un_hyphen_DT"]]
+  expected <- c("2023-12-31","2020-12-31","2019-12-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_un_blank", date_format = "dmy",
+                        separator = "-", month = "UN", suffix = "_DT", min_max = 'max')
+  actual_f <- actual[["day_un_month_un_blank_DTF"]]
+  actual <- actual[["day_un_month_un_blank_DT"]]
+  expected <- c("2023-12-31","2020-12-31","2019-12-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_unk_hyphen", date_format = "dmy",
+                        separator = "-", month = "UNK", suffix = "_DT", min_max = 'max')
+  actual_f <- actual[["day_un_month_unk_hyphen_DTF"]]
+  actual <- actual[["day_un_month_unk_hyphen_DT"]]
+  expected <- c("2023-12-31","2020-12-31","2019-12-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = ymd_day_month_blank, column_name = "day_un_month_unk_blank", date_format = "dmy",
+                        separator = "-", month = "UNK", suffix = "_DT", min_max = 'max')
+  actual_f <- actual[["day_un_month_unk_blank_DTF"]]
+  actual <- actual[["day_un_month_unk_blank_DT"]]
+  expected <- c("2023-12-31","2020-12-31","2019-12-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D, M", "D, M")
+  expect_equal(actual_f, expected_f)
+
+
   dmy_day_un <- data.frame(
     day_un_month_numeric_hyphen = c(
       "UN-05-2023",
@@ -741,8 +1399,151 @@ test_that("check if impute_date works for parameter min_max = 'max'", {
   expect_equal(actual_f, expected_f)
 
 
+  dmy_day_blank <- data.frame(
+    day_un_month_numeric_hyphen = c(
+      "05-2023",
+      "12-2021",
+      "07-2022"
+    ),
+    day_un_month_character_hyphen = c(
+      "May-2023",
+      "Dec-2021",
+      "Jul-2022"
+    ),
+    day_un_month_character_blank = c(
+      "May 2023",
+      "Dec 2021",
+      "Jul 2022"),
+    day_un_month_numeric_slash = c(
+      "05/2023",
+      "12/2021",
+      "07/2022"
+    ),
+    day_un_month_character_slash = c(
+      "MAY/2023",
+      "DEC/2021",
+      "JUL/2022"
+    )
+  )
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_numeric_hyphen",
+                        suffix = "_DT", date_format = 'dmy', separator =  "-", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_numeric_hyphen_DTF"]]
+  actual <- actual[["day_un_month_numeric_hyphen_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
 
-  dmy_day_un_month_unk_year_unkn <- data.frame(
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_hyphen",
+                        suffix = "_DT", date_format = 'dmy', separator =  "-", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_hyphen_DTF"]]
+  actual <- actual[["day_un_month_character_hyphen_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_blank",
+                        suffix = "_DT", date_format = 'dmy', separator =  " ", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_blank_DTF"]]
+  actual <- actual[["day_un_month_character_blank_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_numeric_slash",
+                        suffix = "_DT", date_format = 'dmy', separator =  "/", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_numeric_slash_DTF"]]
+  actual <- actual[["day_un_month_numeric_slash_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_slash",
+                        suffix = "_DT", date_format = 'dmy', separator =  "/", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_slash_DTF"]]
+  actual <- actual[["day_un_month_character_slash_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c("D", "D", "D")
+  expect_equal(actual_f, expected_f)
+
+
+  dmy_day_blank <- data.frame(
+    day_un_month_numeric_hyphen = c(
+      "31-05-2023",
+      "12-2021",
+      "07-2022"
+    ),
+    day_un_month_character_hyphen = c(
+      "31-May-2023",
+      "Dec-2021",
+      "Jul-2022"
+    ),
+    day_un_month_character_blank = c(
+      "31 May 2023",
+      "Dec 2021",
+      "Jul 2022"),
+    day_un_month_numeric_slash = c(
+      "31/05/2023",
+      "12/2021",
+      "07/2022"
+    ),
+    day_un_month_character_slash = c(
+      "31/MAY/2023",
+      "DEC/2021",
+      "JUL/2022"
+    )
+  )
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_numeric_hyphen",
+                        suffix = "_DT", date_format = 'dmy', separator =  "-", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_numeric_hyphen_DTF"]]
+  actual <- actual[["day_un_month_numeric_hyphen_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_hyphen",
+                        suffix = "_DT", date_format = 'dmy', separator =  "-", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_hyphen_DTF"]]
+  actual <- actual[["day_un_month_character_hyphen_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_blank",
+                        suffix = "_DT", date_format = 'dmy', separator =  " ", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_blank_DTF"]]
+  actual <- actual[["day_un_month_character_blank_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_numeric_slash",
+                        suffix = "_DT", date_format = 'dmy', separator =  "/", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_numeric_slash_DTF"]]
+  actual <- actual[["day_un_month_numeric_slash_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+  actual <- impute_date(data_frame = dmy_day_blank, column_name = "day_un_month_character_slash",
+                        suffix = "_DT", date_format = 'dmy', separator =  "/", day = "UN", min_max = 'max')
+  actual_f <- actual[["day_un_month_character_slash_DTF"]]
+  actual <- actual[["day_un_month_character_slash_DT"]]
+  expected <- c("2023-05-31", "2021-12-31", "2022-07-31")
+  expect_equal(actual, expected)
+  expected_f <- c(NA, "D", "D")
+  expect_equal(actual_f, expected_f)
+
+
+    dmy_day_un_month_unk_year_unkn <- data.frame(
     day_un_month_unk_year_unkn_hyphen = c(
       "UN-UNK-UNKN",
       "UN-UNK-UNKN",
