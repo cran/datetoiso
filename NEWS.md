@@ -1,4 +1,14 @@
+# datetoiso 1.2.0
+## Added
+- Added full reconciliation functionality via `reconcile()`:
+  - Detects **inserted**, **deleted**, and **updated** records.
+  - Supports reconciliation using a specified **index** (one or multiple key variables).
+  - When `index = NA`, performs a full-row comparison based on all common columns.
+  - Provides column-level change detection with detailed field-level reporting.
+
 # datetoiso 1.1.1
+## Fixed
+- Removed a non-functioning URL from `README.md` to comply with CRAN URL validation rules.
 
 # datetoiso 1.1.0
 ## Added

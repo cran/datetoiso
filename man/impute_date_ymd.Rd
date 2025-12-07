@@ -28,8 +28,8 @@ impute_date_ymd(
 
 \item{day}{by default "UN" - the format of unknown day}
 
-\item{min_max}{by default "min". controlling imputation direction."min" → Impute the earliest possible date
-"max"` → Impute the latest possible date}
+\item{min_max}{by default "min". controlling imputation direction."min" - Impute the earliest possible date
+"max"` - Impute the latest possible date}
 
 \item{suffix}{by default "_DT" - new imputed date is named as source variable with suffix}
 }
@@ -59,10 +59,6 @@ This flag variable indicates the type of imputation performed:
   \item `"M"` — The **month** component were imputed.
   \item `"D, M"` — Both **month** and **day** components were imputed.
 }
-}
-\examples{
-impute_date_ymd(data_frame = data.frame(K = c('2025/11/UN', '2025/11/23')),
-column_name = "K", separator = "/")
 }
 \author{
 Lukasz Andrzejewski

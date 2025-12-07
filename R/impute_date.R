@@ -27,17 +27,13 @@
 #' @param year by default "UNKN" - the format of unknown year
 #' @param month by default "UNK" - the format of unknown month
 #' @param day by default "UN" - the format of unknown day
-#' @param min_max by default "min". controlling imputation direction."min" → Impute the earliest possible date
-#' "max"` → Impute the latest possible date
+#' @param min_max by default "min". controlling imputation direction."min" - Impute the earliest possible date
+#' "max"` - Impute the latest possible date
 #' @param suffix by default "_DT" - new imputed date is named as source variable with suffix
 #' @author Lukasz Andrzejewski
 #'
 #' @return A data frame identical to the input, with an additional column representing the imputed values.
 #' The imputed column name is constructed by appending the suffix "_imputed" to the source variable name.
-#' @export
-#'
-#' @examples impute_date_ymd(data_frame = data.frame(K = c('2025/11/UN', '2025/11/23')),
-#' column_name = "K", separator = "/")
 impute_date_ymd <- function(data_frame, column_name, separator = "-", year = "UNKN", month = "UNK", day = "UN", min_max = "min", suffix = "_DT") {
 
   dates <- data_frame[[column_name]]
@@ -406,17 +402,13 @@ check_if_month_year_entered <- function(data_frame, column_name, separator = "-"
 #' @param year by default "UNKN" - the format of unknown year
 #' @param month by default "UNK" - the format of unknown month
 #' @param day by default "UN" - the format of unknown day
-#' @param min_max by default "min". controlling imputation direction."min" → Impute the earliest possible date
-#' "max"` → Impute the latest possible date
+#' @param min_max by default "min". controlling imputation direction."min" - Impute the earliest possible date
+#' "max"` - Impute the latest possible date
 #' @param suffix by default "_DT" - new imputed date is named as source variable with suffix
 #' @author Lukasz Andrzejewski
 #'
 #' @return A data frame identical to the input, with an additional column representing the imputed values.
 #' The imputed column name is constructed by appending the suffix "_imputed" to the source variable name.
-#' @export
-#'
-#' @examples impute_date_dmy(data_frame = data.frame(K = c('NA 11 2025', '23 11 2025')),
-#' column_name = "K", separator = " ", day = "NA")
 impute_date_dmy <- function(data_frame, column_name, separator = "-", year = "UNKN", month = "UNK", day = "UN", min_max = "min", suffix = "_DT") {
 
   dates <- data_frame[[column_name]]
@@ -555,8 +547,8 @@ impute_date_dmy <- function(data_frame, column_name, separator = "-", year = "UN
 #' @param month by default "UNK" - the format of unknown month
 #' @param day by default "UN" - the format of unknown day
 #' @param date_format by default "ymd". choose between ymd (if first year, then month then day) and dmy (if first day, then month then year)
-#' @param min_max by default "min". controlling imputation direction."min" → Impute the earliest possible date
-#' "max"` → Impute the latest possible date
+#' @param min_max by default "min". controlling imputation direction."min" - Impute the earliest possible date
+#' "max"` - Impute the latest possible date
 #' @param suffix by default "_DT" - new imputed date is named as source variable with suffix
 #' @author Lukasz Andrzejewski
 #'

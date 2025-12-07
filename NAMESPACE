@@ -3,6 +3,6 @@
 export(clean_date)
 export(dfiso)
 export(impute_date)
-export(impute_date_dmy)
-export(impute_date_ymd)
+export(reconcile)
 export(viso)
+importFrom(magrittr,"%>%")

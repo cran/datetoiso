@@ -31,8 +31,8 @@ impute_date(
 
 \item{day}{by default "UN" - the format of unknown day}
 
-\item{min_max}{by default "min". controlling imputation direction."min" → Impute the earliest possible date
-"max"` → Impute the latest possible date}
+\item{min_max}{by default "min". controlling imputation direction."min" - Impute the earliest possible date
+"max"` - Impute the latest possible date}
 
 \item{suffix}{by default "_DT" - new imputed date is named as source variable with suffix}
 }
