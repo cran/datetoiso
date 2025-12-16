@@ -1,3 +1,7 @@
+# datetoiso 1.2.1
+- Updated the package DESCRIPTION to improve clarity and wording.
+- No changes to package functionality,
+
 # datetoiso 1.2.0
 ## Added
 - Added full reconciliation functionality via `reconcile()`:
